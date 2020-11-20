@@ -1,10 +1,10 @@
 import React, {useEffect, useRef, useState} from 'react';
-import { select } from 'd3';
+import { select, line, curveCardinal } from 'd3';
 
 import './App.css';
 
 function App() {
-  const [data, setData] = useState([25, 30, 45, 60, 20])
+  const [data, setData] = useState<[number, number][]>([[0, 0], [50, 70], [100, 35], [150, 75], [200, 30], [250, 120], [300, 90]])
 
   const svgRef = useRef<SVGSVGElement>(null!);
 
@@ -12,14 +12,17 @@ function App() {
     const { current: svgCurrentRef } = svgRef;
 
     const svg = select(svgCurrentRef);
+    const pathLine = line().curve(curveCardinal.tension(0))
+      .x((value, idx) => value[0])
+      .y((value, idx) => 150 - value[1])
+
     svg
-      .selectAll('circle')
-      .data(data)
-      .join('circle')
-      .attr('r', value => value)
-      .attr('cx', value => (value * 2))
-      .attr('cy', value => (value * 2))
-      .attr('stroke', 'red')
+      .selectAll('path')
+      .data([data])
+      .join('path')
+      .attr('d', (value) => pathLine(value))
+      .attr('fill', 'none')
+      .attr('stroke', 'blue')
 
   }, [data])
 
@@ -30,12 +33,16 @@ function App() {
       <svg ref={svgRef} />
       <br/>
       <button onClick={() => {
-        setData((prevState) => prevState.map(value => (value + 5)))
+        setData((prevState) =>
+          prevState.map((value) =>
+            value.map(item => (item + 10))
+          ) as [number, number][]
+        )
       }}>
         Update data
       </button>
       <button onClick={() => {
-        setData((prevState) => prevState.filter(value => (value < 35)))
+        setData((prevState) => prevState.filter(value => (value.map(item => item < 35))))
       }}>
         Filter data
       </button>
