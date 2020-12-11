@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { select, line, curveCardinal, axisBottom, axisRight, scaleLinear} from 'd3';
+import { select, scaleBand, axisBottom, axisRight, scaleLinear, scaleOrdinal } from 'd3';
 
 import './App.css';
 
 function App() {
-  const [data, setData] = useState<[number, number][]>([[0, 0], [0, 70], [100, 35], [150, 75], [200, 30], [250, 120], [300, 90]])
+  const [data, setData] = useState<[number, number][]>([[0, 10], [0, 70], [100, 35], [150, 75], [200, 30], [250, 120], [300, 90]])
 
   const svgRef = useRef<SVGSVGElement>(null!);
 
@@ -12,17 +12,23 @@ function App() {
     const { current: svgCurrentRef } = svgRef;
     const svg = select(svgCurrentRef);
 
-    const xScale = scaleLinear()
-      .domain([0, data.length - 1])
-      .range([0, 300]);
+    const xScale = scaleBand()
+      .domain(data.map((_, idx) => String(idx)))
+      .range([0, 300])
+      .padding(0.5);
 
     const yScale = scaleLinear()
       .domain([0, 150])
       .range([150, 0]);
 
+    const colorScale = scaleLinear()
+      .domain([75, 100, 150])
+      .range(['green', 'orange', 'red'] as any)
+      .clamp(true);
+
+
     const xAxis = axisBottom(xScale)
       .ticks(data.length)
-      .tickFormat((idx) => `${Number(idx) + 1}`)
 
     svg.select('.x-axis')
       .style('transform', 'translateY(150px)')
@@ -32,18 +38,19 @@ function App() {
       .style('transform', 'translateX(300px)')
       .call(axisRight(yScale) as any)
 
-    const pathLine = line().curve(curveCardinal)
-      .x((value, idx) => xScale(idx))
-      .y((value, idx) => yScale(value[1]))
-
     svg
-      .selectAll('.line')
-      .data([data])
-      .join('path')
-      .attr('class', 'line')
-      .attr('d', pathLine)
-      .attr('fill', 'none')
-      .attr('stroke', 'blue')
+      .selectAll('.bar')
+      .data(data)
+      .join('rect')
+      .attr('class', 'bar')
+      .style('transform', 'scale(1, -1)')
+      .attr('x', (value, idx) => String(xScale(`${idx}`)))
+      .attr('y', -150)
+      .attr('width', xScale.bandwidth())
+      .transition()
+      .attr('fill', (value) => colorScale(value[1]))
+      .attr('height', (value) => 150 - yScale(value[1]))
+
 
   }, [data])
 
