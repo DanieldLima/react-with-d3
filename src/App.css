@@ -10,3 +10,9 @@ svg {
   margin-bottom: 80px;
   overflow: visible;
 }
+
+button {
+  margin-left: 5px;
+  width: 100px;
+}
+
