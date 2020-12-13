@@ -1,6 +1,6 @@
 import React, {useEffect, useRef } from 'react';
 import {axisBottom, axisRight, scaleBand, scaleLinear, select} from "d3";
-import { useResizeObserver } from "./hooks/useResizeObserver";
+import { useResizeObserver } from "../hooks/useResizeObserver";
 
 
 type BarChartProps = {
@@ -88,7 +88,7 @@ const BarChart = ({ data }: BarChartProps) => {
   }, [data, rect])
 
   return (
-    <div ref={wrapperRef} className="bar-chart__wrapper">
+    <div ref={wrapperRef} className="chart-wrapper">
       <svg ref={svgRef}>
         <g className="x-axis" />
         <g className="y-axis" />
