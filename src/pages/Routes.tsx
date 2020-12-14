@@ -4,6 +4,7 @@ import Navigation from "../components/Navigation";
 
 import BarChartPage from "./BarChartPage";
 import GaugeChartPage from "./GaugeChartPage";
+import BBTimelinePage from "./BBTimelinePage";
 
 const Routes = () => {
 
@@ -12,7 +13,9 @@ const Routes = () => {
       <Navigation />
       <Switch>
         <Route exact path="/" component={BarChartPage} />
-        <Route exact path="/gauge-chart" component={GaugeChartPage} />
+        <Route path="/gauge-chart" component={GaugeChartPage} />
+        <Route path="/gauge-chart" component={GaugeChartPage} />
+        <Route path="/bbtimeline" component={BBTimelinePage} />
       </Switch>
     </Router>
   );

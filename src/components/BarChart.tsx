@@ -9,13 +9,16 @@ type BarChartProps = {
 
 const BarChart = ({ data }: BarChartProps) => {
   const svgRef = useRef<SVGSVGElement>(null!);
+  const xAxisRef = useRef<SVGGElement>(null!);
+  const yAxisRef = useRef<SVGGElement>(null!);
   const wrapperRef = useRef<HTMLDivElement>(null!);
 
   const rect = useResizeObserver(wrapperRef)
 
   useEffect(() => {
-    const { current: svgCurrentRef } = svgRef;
-    const svg = select(svgCurrentRef);
+    const svg = select(svgRef.current);
+    const xAxisSVGG = select(xAxisRef.current);
+    const yAxisSVGG = select(yAxisRef.current);
 
     if (!rect) return;
 
@@ -37,16 +40,16 @@ const BarChart = ({ data }: BarChartProps) => {
       .clamp(true);
 
 
-    const xAxis = axisBottom(xScale)
+    const xAxisBottom = axisBottom(xScale)
       .ticks(data.length)
 
-    svg.select('.x-axis')
+    xAxisSVGG
       .style('transform', `translateY(${height}px)`)
-      .call(xAxis as any)
+      .call(xAxisBottom)
 
-    svg.select('.y-axis')
+    yAxisSVGG
       .style('transform', `translateX(${width}px)`)
-      .call(axisRight(yScale) as any)
+      .call(axisRight(yScale))
 
     svg
       .selectAll('.bar')
@@ -90,8 +93,8 @@ const BarChart = ({ data }: BarChartProps) => {
   return (
     <div ref={wrapperRef} className="chart-wrapper">
       <svg ref={svgRef}>
-        <g className="x-axis" />
-        <g className="y-axis" />
+        <g ref={xAxisRef} className="x-axis" />
+        <g ref={yAxisRef} className="y-axis" />
       </svg>
     </div>
   );

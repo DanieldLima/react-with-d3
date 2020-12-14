@@ -26,6 +26,15 @@ const Navigation = () => {
         }>
         GaugeChart
       </Link>
+      <Link
+        to="/bbtimeline"
+        className={
+          location.pathname === '/bbtimeline'
+            ? `app__navigation__item app__navigation__item--active`
+            : `app__navigation__item`
+        }>
+        BBTimeline
+      </Link>
     </div>
   );
 };

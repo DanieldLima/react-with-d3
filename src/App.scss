@@ -27,6 +27,7 @@
   .chart-wrapper {
     height: 450px;
     margin-bottom: 2rem;
+    padding: 0 50px;
   }
 
   &__bar-chart-page,
@@ -51,6 +52,16 @@
   }
 
   &__gauge-chart-page {
+  }
+
+  &__gauge-chart-page {
+    &__buttons {
+      select {
+        padding: 16px;
+        border-radius: 8px;
+        background: #fff;
+      }
+    }
   }
 }
 
